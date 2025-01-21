@@ -22,7 +22,7 @@ jobs:
       - name: Get Meta
         id: meta
         run: |
-          echo REPO_NAME=$(echo ${GITHUB_REPOSITORY} | awk -F"/" '{print tolower($2)}') >> $GITHUB_OUTPUT
+          echo "REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" >> $GITHUB_OUTPUT
           echo REPOSITORY=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_OUTPUT
           echo REPO_VERSION=${GITHUB_REF_NAME#v} >> $GITHUB_OUTPUT
           echo SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
@@ -32,6 +32,7 @@ jobs:
           SHORT_SHA: ${{ steps.meta.outputs.SHA_SHORT }}  
         run: |
           sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$SHORT_SHA'/' Chart.yaml 
+          cat Chart.yaml
           echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
       - name: Package and Sign
         id: package_and_sign
@@ -49,4 +50,4 @@ jobs:
         if: github.event_name != 'pull_request'
         id: push
         run: |
-          helm push ./sample-app-chart-${{ steps.append_version.outputs.VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/${{ steps.meta.outputs.REPO_NAME }}          
+          helm push ./sample-app-chart-${{ steps.append_version.outputs.VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/${{ steps.meta.outputs.REPOSITORY }}          
