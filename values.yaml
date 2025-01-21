@@ -1,5 +1,46 @@
 #configuration for cronjob
 cronJob:
+  # https://crontab.guru/#*_*/1_*_*_*
+  # “At every minute past every hour.” 
+  schedule: "* */1 * * *"
+  history:
+    failedJobsHistoryLimit: 1
+    successfulJobsHistoryLimit: 1
+  image:
+    repository: derailed/popeye
+    pullPolicy: IfNotPresent
+  imagePullSecrets: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # runAsNonRoot: true
+    # seccompProfile:
+    #   type: RuntimeDefault
+  resources: {}
+    # limits:
+    #   cpu: 150m
+    #   memory: 100Mi
+    # requests:
+    #   cpu: 50m
+    #   memory: 30Mi
+
+  containerConfiguration:
+    # https://github.com/derailed/popeye?tab=readme-ov-file#output-formats
+    # possible formats: standard, jurassic, yaml, html, json, junit, prometheus, score
+    outputFormat: standard
+    prometheus:
+      address: ""
+      basicAuth:
+        # set to true if arguments should be tempalted
+        enabled: false
+        user: ""
+        password: ""
+
 
 #configuration for job started by cronjob
 job:
