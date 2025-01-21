@@ -1,0 +1,7 @@
+.cr-gpg
+.gitea
+.github
+.git
+test.sh
+out/
+test/
