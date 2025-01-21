@@ -16,7 +16,7 @@ jobs:
       image: ghcr.io/deb4sh/ci-helm-image:sha-1171f2a
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0 # all history for all branches and tags      
       - name: Get Meta
@@ -50,4 +50,4 @@ jobs:
         if: github.event_name != 'pull_request'
         id: push
         run: |
-          helm push ./sample-app-chart-${{ steps.append_version.outputs.VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/${{ steps.meta.outputs.REPOSITORY }}          
+          helm push ./dist/popeye-${{ steps.append_version.outputs.VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/${{ steps.meta.outputs.REPO_NAME }}          
