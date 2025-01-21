@@ -1,0 +1,131 @@
+name: helm-package-and-deploy
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  package-and-deploy-dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    container:
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history for all branches and tags      
+      - name: Get Meta
+        id: meta
+        run: |
+          echo REPO_NAME=$(echo ${GITHUB_REPOSITORY} | awk -F"/" '{print tolower($2)}') >> $GITHUB_OUTPUT
+          echo REPO_VERSION=${GITHUB_REF_NAME#v} >> $GITHUB_OUTPUT
+          echo SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
+      - name: Append Git Sha to version
+        id: append_version
+        env:
+          SHORT_SHA: ${{ steps.meta.outputs.SHA_SHORT }}  
+        run: |
+          sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$SHORT_SHA'/' Chart.yaml 
+          cat Chart.yaml
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          # referring keyring to private key of gpg
+          keyring="$gpg_dir/secring.gpg"
+          # storing base64 GPG key into keyring
+          echo "$GPG_KEYRING_BASE64" | base64 -d > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          # storing passphrase data into a file
+          echo "$GPG_PASSPHRASE" > "$passphrase_file"
+          # saving passphrase into github-environment
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          # saving private key into github-environemnt
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          GPG_KEYRING_BASE64: "${{ secrets.GPG_KEYRING_BASE64 }}"
+          GPG_PASSPHRASE: "${{ secrets.GPG_PASS }}"
+      - name: Package and Sign
+        id: package_and_sign
+        run: |
+          mkdir dist
+          echo $HELM_KEY_PASSPHRASE | helm package --dependency-update  --sign ./ --destination dist --key 'ButlerJames' --keyring ./.cr-gpg/secring.gpg --passphrase-file "-"
+        env:
+          HELM_KEY_PASSPHRASE: "${{ secrets.GPG_PASS }}"
+      - name: Push to registry
+        id: push
+        run: |
+          for file in "./dist"/*; do
+            if [ -f "$file" ]; then
+              echo "uploading: $file"
+              curl -u $USER:$PASS $REGISTRY --upload-file $file
+            fi
+          done
+        env:
+          USER: "${{ secrets.REGISTRY_TEST_USER }}"
+          PASS: "${{ secrets.REGISTRY_TEST_PASSWORD }}"
+          REGISTRY: "${{ secrets.REGISTRY_TEST }}"
+  package-and-deploy-main:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    container:
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history for all branches and tags      
+      - name: Get Meta
+        id: meta
+        run: |
+          echo REPO_NAME=$(echo ${GITHUB_REPOSITORY} | awk -F"/" '{print tolower($2)}') >> $GITHUB_OUTPUT
+          echo REPO_VERSION=${GITHUB_REF_NAME#v} >> $GITHUB_OUTPUT
+          echo SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
+      - name: Append Git Sha to version
+        id: append_version
+        env:
+          SHORT_SHA: ${{ steps.meta.outputs.SHA_SHORT }}  
+        run: |
+          sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$SHORT_SHA'/' Chart.yaml 
+          cat Chart.yaml
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          # referring keyring to private key of gpg
+          keyring="$gpg_dir/secring.gpg"
+          # storing base64 GPG key into keyring
+          echo "$GPG_KEYRING_BASE64" | base64 -d > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          # storing passphrase data into a file
+          echo "$GPG_PASSPHRASE" > "$passphrase_file"
+          # saving passphrase into github-environment
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          # saving private key into github-environemnt
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          GPG_KEYRING_BASE64: "${{ secrets.GPG_KEYRING_BASE64 }}"
+          GPG_PASSPHRASE: "${{ secrets.GPG_PASS }}"
+      - name: Package and Sign
+        id: package_and_sign
+        run: |
+          mkdir dist
+          echo $HELM_KEY_PASSPHRASE | helm package --dependency-update --sign ./ --destination dist --key 'ButlerJames' --keyring ./.cr-gpg/secring.gpg --passphrase-file "-"
+        env:
+          HELM_KEY_PASSPHRASE: "${{ secrets.GPG_PASS }}"
+      - name: Push to registry
+        id: push
+        run: |
+          for file in "./dist"/*; do
+            if [ -f "$file" ]; then
+              echo "uploading: $file"
+              curl -u $USER:$PASS $REGISTRY --upload-file $file
+            fi
+          done
+        env:
+          USER: "${{ secrets.REGISTRY_USER }}"
+          PASS: "${{ secrets.REGISTRY_PASSWORD }}"
+          REGISTRY: "${{ secrets.REGISTRY }}"
