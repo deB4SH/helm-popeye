@@ -25,14 +25,13 @@ jobs:
           echo "REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" >> $GITHUB_OUTPUT
           echo REPOSITORY=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_OUTPUT
           echo REPO_VERSION=${GITHUB_REF_NAME#v} >> $GITHUB_OUTPUT
-          echo SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8` >> $GITHUB_OUTPUT
+      - name: Get Sha Version
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
       - name: Append Git Sha to version
         id: append_version
-        env:
-          SHORT_SHA: ${{ steps.meta.outputs.SHA_SHORT }}  
         run: |
-          echo "short sha to add as pre-release tag: $SHORT_SHA"
-          sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$SHORT_SHA'/' Chart.yaml 
+          echo "short sha to add as pre-release tag: $GITHUB_SHA_SHORT"
+          sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$GITHUB_SHA_SHORT'/' Chart.yaml 
           cat Chart.yaml
           echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
       - name: Package and Sign
