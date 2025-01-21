@@ -31,6 +31,7 @@ jobs:
         env:
           SHORT_SHA: ${{ steps.meta.outputs.SHA_SHORT }}  
         run: |
+          echo "short sha to add as pre-release tag: $SHORT_SHA"
           sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$SHORT_SHA'/' Chart.yaml 
           cat Chart.yaml
           echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
