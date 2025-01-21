@@ -53,7 +53,7 @@ spec:
                       key: prom-password
               {{- end }}
               resources:
-                {{- toYaml .Values.cronJob.resources | nindent 12 }}
+                {{- toYaml .Values.cronJob.resources | nindent 16 }}
               {{- if .Values.popeyeConfigugration }}
               volumeMounts:
                 - name: configuration
