@@ -2,6 +2,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ printf "%s-%s" .Release.Name "clusterrole" }}
+  labels:
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 rules:
   #base ressources
   - apiGroups: [""]
