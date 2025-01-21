@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ printf "%s-%s" .Release.Name "config-popeye" }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   spinach.yml: |
     {{- .Values.popeyeConfigugration | toYaml | nindent 4 }}
