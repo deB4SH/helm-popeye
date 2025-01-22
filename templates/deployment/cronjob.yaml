@@ -46,10 +46,10 @@ spec:
                 - --force-exit-zero=true
                 - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
                 {{- if and (eq .Values.cronJob.containerConfiguration.outputFormat "prometheus") (.Values.cronJob.containerConfiguration.prometheus.address) }}
-                - --pushgateway-address={{ .Values.cronJob.containerConfiguration.prometheus.address }}
+                - --push-gtwy-url={{ .Values.cronJob.containerConfiguration.prometheus.address }}
                 {{- if .Values.cronJob.containerConfiguration.prometheus.basicAuth.enabled }}
-                - --pushgateway-basic-auth-user={{ .Values.cronJob.containerConfiguration.prometheus.basicAuth.user }}
-                - --pushgateway-basic-auth-pass=$PROM_BASIC_AUTH_PW
+                - --push-gtwy-user={{ .Values.cronJob.containerConfiguration.prometheus.basicAuth.user }}
+                - --push-gtwy-password=$PROM_BASIC_AUTH_PW
                 {{- end }}
                 {{- end }}
               {{- if and (eq .Values.cronJob.containerConfiguration.outputFormat "prometheus") (.Values.cronJob.containerConfiguration.prometheus.basicAuth.enabled) }}
