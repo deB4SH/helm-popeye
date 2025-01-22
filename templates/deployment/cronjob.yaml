@@ -41,7 +41,7 @@ spec:
               {{- end }}
               args:
                 {{- if .Values.popeyeConfiguration }}
-                - "-f /etc/config/popeye/spinach.yml"
+                - -f /etc/config/popeye/spinach.yml
                 {{- end }}
                 - --force-exit-zero=true
                 - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
