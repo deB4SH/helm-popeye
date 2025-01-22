@@ -21,13 +21,7 @@ cronJob:
     # runAsNonRoot: true
     # seccompProfile:
     #   type: RuntimeDefault
-  resources: {}
-    # limits:
-    #   cpu: 150m
-    #   memory: 100Mi
-    # requests:
-    #   cpu: 50m
-    #   memory: 30Mi
+  
 
   containerConfiguration:
     # https://github.com/derailed/popeye?tab=readme-ov-file#output-formats
@@ -44,6 +38,23 @@ cronJob:
 
 #configuration for job started by cronjob
 job:
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # runAsNonRoot: true
+    # runAsUser: 1000
+    # runAsGroup: 1000
+    # seccompProfile:
+    #   type: RuntimeDefault
+    # capabilities:
+    #   drop:
+    #     - ALL
+  resources: {}
+    # limits:
+    #   cpu: 150m
+    #   memory: 100Mi
+    # requests:
+    #   cpu: 50m
+    #   memory: 30Mi
 
 
 popeyeConfigugration: {}
