@@ -41,7 +41,7 @@ spec:
               {{- end }}
               args:
                 {{- if .Values.popeyeConfiguration }}
-                - "-f /tmp/spinach.yml"
+                - "-f /tmp/popeyeconfiguration/spinach.yml"
                 {{- end }}
                 - --force-exit-zero=true
                 - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
@@ -67,7 +67,7 @@ spec:
               {{- if .Values.popeyeConfiguration }}
               volumeMounts:
                 - name: configuration
-                  mountPath: /tmp
+                  mountPath: /tmp/popeyeconfiguration
               {{- end }}
           {{- if not (.Values.cronJob.nodeSelector | empty) }}
           nodeSelector:
