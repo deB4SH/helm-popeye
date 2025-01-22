@@ -52,4 +52,4 @@ jobs:
         if: github.event_name != 'pull_request'
         id: push
         run: |
-          helm push ./dist/popeye-${{ steps.append_version.outputs.HELM_FINAL_VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/charts        
+          helm push ./dist/popeye-${{ steps.append_version.outputs.HELM_FINAL_VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}        
