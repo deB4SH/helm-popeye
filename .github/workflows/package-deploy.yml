@@ -1,0 +1,55 @@
+name: helm-package-and-deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  package-and-deploy:
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0 # all history for all branches and tags      
+      - uses: azure/setup-helm@v4.2.0
+        id: installHelm
+        with:
+          version: 'latest'
+      - name: Get Meta
+        id: meta
+        run: |
+          echo "REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" >> $GITHUB_OUTPUT
+          echo REPOSITORY=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_OUTPUT
+          echo REPO_VERSION=${GITHUB_REF_NAME#v} >> $GITHUB_OUTPUT
+      - name: Get Sha Version
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
+      - name: Append Git Sha to version
+        id: append_version
+        run: |
+          echo "short sha to add as pre-release tag: $GITHUB_SHA_SHORT"
+          sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$GITHUB_SHA_SHORT'/' Chart.yaml 
+          cat Chart.yaml
+          echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}-[a-z0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
+      - name: Package and Sign
+        id: package_and_sign
+        run: |
+          mkdir dist
+          helm package --dependency-update ./ --destination dist
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push to registry
+        if: github.event_name != 'pull_request'
+        id: push
+        run: |
+          helm push ./dist/popeye-${{ steps.append_version.outputs.HELM_FINAL_VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}        
