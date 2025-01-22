@@ -41,7 +41,7 @@ spec:
               {{- end }}
               args:
                 {{- if .Values.popeyeConfiguration }}
-                - "-f /tmp/popeyeconfiguration/spinach.yml"
+                - "-f /etc/config/popeye/spinach.yml"
                 {{- end }}
                 - --force-exit-zero=true
                 - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
@@ -67,8 +67,7 @@ spec:
               {{- if .Values.popeyeConfiguration }}
               volumeMounts:
                 - name: configuration
-                  mountPath: /tmp/popeyeconfiguration
-                  subPath: spinach.yml
+                  mountPath: /etc/config/popeye
               {{- end }}
           {{- if not (.Values.cronJob.nodeSelector | empty) }}
           nodeSelector:
@@ -87,4 +86,7 @@ spec:
             - name: configuration
               configMap:
                 name: {{ printf "%s-%s" .Release.Name "config-popeye" }}
+                items:
+                  - key: spinach
+                    path: spinach.yml
           {{- end }}
