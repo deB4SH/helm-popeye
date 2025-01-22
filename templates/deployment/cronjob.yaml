@@ -68,6 +68,7 @@ spec:
               volumeMounts:
                 - name: configuration
                   mountPath: /tmp/popeyeconfiguration
+                  subPath: spinach.yml
               {{- end }}
           {{- if not (.Values.cronJob.nodeSelector | empty) }}
           nodeSelector:
