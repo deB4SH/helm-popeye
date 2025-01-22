@@ -8,4 +8,4 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   spinach.yml: |-
-    {{- .Values.popeyeConfigugration | toYaml | nindent 4 }}
+    {{- .Values.popeyeConfiguration | toYaml | nindent 4 }}
