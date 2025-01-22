@@ -35,7 +35,7 @@ jobs:
           echo "short sha to add as pre-release tag: $GITHUB_SHA_SHORT"
           sed -E -i '0,/version:/s/version: ([0-9]+\.?){3}/\0-'$GITHUB_SHA_SHORT'/' Chart.yaml 
           cat Chart.yaml
-          echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
+          echo HELM_FINAL_VERSION=$(grep -m 1 -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}-[a-z0-9]{1,}' Chart.yaml) >> $GITHUB_OUTPUT
       - name: Package and Sign
         id: package_and_sign
         run: |
@@ -52,4 +52,4 @@ jobs:
         if: github.event_name != 'pull_request'
         id: push
         run: |
-          helm push ./dist/popeye-${{ steps.append_version.outputs.HELM_FINAL_VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/${{ steps.meta.outputs.REPO_NAME }}          
+          helm push ./dist/popeye-${{ steps.append_version.outputs.HELM_FINAL_VERSION }}.tgz oci://${{ steps.meta.outputs.REPOSITORY }}/charts        
