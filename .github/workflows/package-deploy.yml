@@ -3,11 +3,11 @@ name: helm-package-and-deploy
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
-  package-and-deploy-dev:
-    if: github.ref == 'refs/heads/dev'
+  package-and-deploy:
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
