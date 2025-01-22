@@ -22,15 +22,23 @@ spec:
       template:
         spec:
           serviceAccountName: {{ printf "%s-%s" .Release.Name "sa" }}
+          {{- if not (.Values.cronJob.securityContext | empty) }}
           securityContext:
             {{- toYaml .Values.cronJob.securityContext | nindent 12 }}
+          {{- end }}
           restartPolicy: Never
+          {{- if not (.Values.cronJob.imagePullSecrets | empty) }}
           imagePullSecrets:
             {{- toYaml .Values.cronJob.imagePullSecrets | nindent 12 }}
+          {{- end }}
           containers:
             - name: {{ printf "%s-%s" .Release.Name "container" }}
               image: "{{ .Values.cronJob.image.repository }}:{{ .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.cronJob.image.pullPolicy }}
+              {{- if not (.Values.job.securityContext | empty) }}
+              securityContext:
+                {{- toYaml .Values.job.securityContext | nindent 16 }}
+              {{- end }}
               args:
                 {{- if .Values.popeyeConfigugration }}
                 - "-f /tmp/spinach.yml"
@@ -52,19 +60,27 @@ spec:
                       name: {{ printf "%s-%s" .Release.Name "secret" }}
                       key: prom-password
               {{- end }}
+              {{- if not (.Values.job.resources | empty) }}
               resources:
-                {{- toYaml .Values.cronJob.resources | nindent 16 }}
+                {{- toYaml .Values.job.resources | nindent 16 }}
+              {{- end }}
               {{- if .Values.popeyeConfigugration }}
               volumeMounts:
                 - name: configuration
                   mountPath: /tmp
               {{- end }}
+          {{- if not (.Values.cronJob.nodeSelector | empty) }}
           nodeSelector:
             {{- toYaml .Values.cronJob.nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- if not (.Values.cronJob.affinity | empty) }}
           affinity:
             {{- toYaml .Values.cronJob.affinity | nindent 12 }}
+          {{- end }}
+          {{- if not (.Values.cronJob.tolerations | empty) }}
           tolerations:
             {{- toYaml .Values.cronJob.tolerations | nindent 12 }}
+          {{- end }}
           {{- if .Values.popeyeConfigugration }}
           volumes:
             - name: configuration
