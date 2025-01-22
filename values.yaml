@@ -57,7 +57,7 @@ job:
     #   memory: 30Mi
 
 
-popeyeConfigugration: {}
+popeyeConfiguration: {}
   # popeye:
   #   allocations:
   #     cpu:

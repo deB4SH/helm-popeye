@@ -40,7 +40,7 @@ spec:
                 {{- toYaml .Values.job.securityContext | nindent 16 }}
               {{- end }}
               args:
-                {{- if .Values.popeyeConfigugration }}
+                {{- if .Values.popeyeConfiguration }}
                 - "-f /tmp/spinach.yml"
                 {{- end }}
                 - --force-exit-zero=true
@@ -64,7 +64,7 @@ spec:
               resources:
                 {{- toYaml .Values.job.resources | nindent 16 }}
               {{- end }}
-              {{- if .Values.popeyeConfigugration }}
+              {{- if .Values.popeyeConfiguration }}
               volumeMounts:
                 - name: configuration
                   mountPath: /tmp
@@ -81,7 +81,7 @@ spec:
           tolerations:
             {{- toYaml .Values.cronJob.tolerations | nindent 12 }}
           {{- end }}
-          {{- if .Values.popeyeConfigugration }}
+          {{- if .Values.popeyeConfiguration }}
           volumes:
             - name: configuration
               configMap:
