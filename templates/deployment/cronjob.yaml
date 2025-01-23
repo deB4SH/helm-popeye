@@ -43,11 +43,10 @@ spec:
                 - /bin/sh
                 - -c
                 - popeye 
-              args:
                 {{- if .Values.popeyeConfiguration }}
                 - -f /etc/config/popeye/spinach.yml
                 {{- end }}
-                - --force-exit-zero
+                - --force-exit-zero=true
                 - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
                 {{- if and (eq .Values.cronJob.containerConfiguration.outputFormat "prometheus") (.Values.cronJob.containerConfiguration.prometheus.address) }}
                 - --push-gtwy-url={{ .Values.cronJob.containerConfiguration.prometheus.address }}
