@@ -42,19 +42,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - popeye 
-                {{- if .Values.popeyeConfiguration }}
-                - -f /etc/config/popeye/spinach.yml
-                {{- end }}
-                - --force-exit-zero=true
-                - --out={{ .Values.cronJob.containerConfiguration.outputFormat }}
-                {{- if and (eq .Values.cronJob.containerConfiguration.outputFormat "prometheus") (.Values.cronJob.containerConfiguration.prometheus.address) }}
-                - --push-gtwy-url={{ .Values.cronJob.containerConfiguration.prometheus.address }}
-                {{- if .Values.cronJob.containerConfiguration.prometheus.basicAuth.enabled }}
-                - --push-gtwy-user={{ .Values.cronJob.containerConfiguration.prometheus.basicAuth.user }}
-                - --push-gtwy-password=$PROM_BASIC_AUTH_PW
-                {{- end }}
-                {{- end }}
+                - {{ template "popeyeCmd" .Values }} 
               {{- if and (eq .Values.cronJob.containerConfiguration.outputFormat "prometheus") (.Values.cronJob.containerConfiguration.prometheus.basicAuth.enabled) }}
               env:
                 - name: PROM_BASIC_AUTH_PW

@@ -2,5 +2,4 @@
 if [ -d ./test ]; then
     rm -rf ./test
 fi
-helm dependency build  
-helm template --debug --release-name popeye  --output-dir ./test ./
+helm template --debug --release-name popeye --values values.yaml --output-dir ./test ./
