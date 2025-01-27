@@ -10,8 +10,15 @@ Generates the command for popeye
 
 {{- $cmd = cat $cmd "--force-exit-zero=true"}}
 
-{{- $cmd = cat $cmd (printf "%s%s" "--out=" $.cronJob.containerConfiguration.outputFormat)}} 
+{{- if $.cronJob.containerConfiguration.allNamespaces}}
+    {{- $cmd = cat $cmd  "--all-namespaces" }}
+{{- end }}
 
+{{- if $.cronJob.containerConfiguration.logLevel}}
+    {{- $cmd = cat $cmd (printf "%s%d" "--log-level=" ($.cronJob.containerConfiguration.logLevel | int))}}
+{{- end }}
+
+{{- $cmd = cat $cmd (printf "%s%s" "--out=" $.cronJob.containerConfiguration.outputFormat)}} 
 
 {{- if and (eq .cronJob.containerConfiguration.outputFormat "prometheus") (.cronJob.containerConfiguration.prometheus.address) }}
 {{- $cmd = cat $cmd (printf "%s%s" "--push-gtwy-url=" $.cronJob.containerConfiguration.prometheus.address)}}
