@@ -27,6 +27,12 @@ cronJob:
     # https://github.com/derailed/popeye?tab=readme-ov-file#output-formats
     # possible formats: standard, jurassic, yaml, html, json, junit, prometheus, score
     outputFormat: standard
+    #trigger to scan all namespaces: options: true,false
+    allNamespaces: true
+    #define log level
+    #Specify log level. Use 0|1|2|3|4 for disable|info|warn|error|debug (default 1)
+    logLevel: 1
+    #prometheus configuration
     prometheus:
       address: ""
       basicAuth:
