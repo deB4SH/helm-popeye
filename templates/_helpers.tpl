@@ -8,6 +8,10 @@ Generates the command for popeye
     {{- $cmd = cat $cmd  "-f /etc/config/popeye/spinach.yml" }}
 {{- end }}
 
+{{- if $.cronJob.containerConfiguration.clusterName}}
+    {{- $cmd = cat $cmd (printf "%s%s" "--cluster-name=" $.cronJob.containerConfiguration.clusterName)}} 
+{{- end }}
+
 {{- $cmd = cat $cmd "--force-exit-zero=true"}}
 
 {{- if $.cronJob.containerConfiguration.allNamespaces}}
@@ -18,9 +22,11 @@ Generates the command for popeye
     {{- $cmd = cat $cmd (printf "%s%d" "--log-level=" ($.cronJob.containerConfiguration.logLevel | int))}}
 {{- end }}
 
-{{- $cmd = cat $cmd (printf "%s%s" "--out=" $.cronJob.containerConfiguration.outputFormat)}} 
+{{- if $.cronJob.containerConfiguration.outputFormat}}
+    {{- $cmd = cat $cmd (printf "%s%s" "--out=" $.cronJob.containerConfiguration.outputFormat)}} 
+{{- end }}
 
-{{- if and (eq .cronJob.containerConfiguration.outputFormat "prometheus") (.cronJob.containerConfiguration.prometheus.address) }}
+{{- if .cronJob.containerConfiguration.prometheus.address }}
 {{- $cmd = cat $cmd (printf "%s%s" "--push-gtwy-url=" $.cronJob.containerConfiguration.prometheus.address)}}
     {{- if .cronJob.containerConfiguration.prometheus.basicAuth.enabled }}
     {{- $cmd = cat $cmd (printf "%s%s" "--push-gtwy-user=" $.cronJob.containerConfiguration.prometheus.basicAuth.user)}}
