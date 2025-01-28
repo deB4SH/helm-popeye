@@ -24,9 +24,11 @@ cronJob:
   
 
   containerConfiguration:
+    # define a cluster name to set for reports
+    clusterName: ""
     # https://github.com/derailed/popeye?tab=readme-ov-file#output-formats
     # possible formats: standard, jurassic, yaml, html, json, junit, prometheus, score
-    outputFormat: standard
+    outputFormat: ""
     #trigger to scan all namespaces: options: true,false
     allNamespaces: true
     #define log level
