@@ -402,7 +402,7 @@ data:
                 "expr": "topk($topk, popeye_code_total{severity=\"warn\", cluster=~\"$cluster\", namespace=~\"$namespace\", linter=~\"$linter\"}) by (namespace, linter)",
                 "format": "time_series",
                 "instant": false,
-                "legendFormat": "[POP-{{printf "{{code}}"}}"] {{printf "{{linter}}"}}" ({{printf "{{namespace}}"}})",
+                "legendFormat": "[POP-{{printf "{{code}}"}}] {{printf "{{linter}}"}} ({{printf "{{namespace}}"}})",
                 "range": true,
                 "refId": "A"
               }
@@ -500,7 +500,7 @@ data:
                 "expr": "topk($topk, popeye_code_total{severity=\"info\", cluster=~\"$cluster\", namespace=~\"$namespace\", linter=~\"$linter\"}) by (namespace, linter)",
                 "format": "time_series",
                 "instant": false,
-                "legendFormat": "[POP-{{printf "{{code}}"}}"] {{printf "{{linter}}"}}",
+                "legendFormat": "[POP-{{printf "{{code}}"}}] {{printf "{{linter}}"}}",
                 "range": true,
                 "refId": "A"
               }
@@ -579,7 +579,7 @@ data:
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"error\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
                     "format": "time_series",
                     "instant": false,
-                    "legendFormat": "{{printf "{{cluster}}"}}" ({{printf "{{namespace}}"}})",
+                    "legendFormat": "{{printf "{{cluster}}"}} ({{printf "{{namespace}}"}})",
                     "range": true,
                     "refId": "A"
                   }
@@ -648,7 +648,7 @@ data:
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"warn\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
                     "format": "time_series",
                     "instant": false,
-                    "legendFormat": "{{printf "{{cluster}}"}}" ({{printf "{{namespace}}"}})",
+                    "legendFormat": "{{printf "{{cluster}}"}} ({{printf "{{namespace}}"}})",
                     "range": true,
                     "refId": "A"
                   }
@@ -717,7 +717,7 @@ data:
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"info\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
                     "format": "time_series",
                     "instant": false,
-                    "legendFormat": "{{printf "{{cluster}}"}}" {{printf "{{namespace}}"}}",
+                    "legendFormat": "{{printf "{{cluster}}"}} {{printf "{{namespace}}"}}",
                     "range": true,
                     "refId": "A"
                   }
