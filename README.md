@@ -17,10 +17,34 @@ Popeye is a readonly tool, it does not alter any of your Kubernetes resources in
 ## How to use
 
 The chart is published via oci repository here on github via `oci://ghcr.io/deb4sh/helm-popeye`.
-A general usage guide for using oci-based registries is provided via the official helm documentation availble [here](https://helm.sh/docs/topics/registries/)
+A general usage guide for using oci-based registries is provided via the official helm documentation available [here](https://helm.sh/docs/topics/registries/)
 
+```
+helm repod add popeye oci://ghcr.io/deb4sh/helm-popeye
+helm repo update
+helm install popeye oci://ghcr.io/deb4sh/helm-popeye --version 0.0.0-e7609a
+```
 
-An other, often prefered way is to use umbrella charts. Through an umbrella chart you can easily provide a generic base configuration and only need to configure your specific cluster environment in a second values configuration.
+> NOTE: Remember this is an oci registry. You need to login with your desired container runtime first. 
+
+If you are using this chart directly in an automated deployment service like ArgoCD you need to configure this repository.
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: ghcr-io-deb4sh-popeye
+  namespace: argocd
+stringData:
+  url: ghcr.io/deb4sh/helm-popeye
+  name: popeye
+  type: helm
+  enableOCI: "true"
+```
+
+Another often preferred way is to use umbrella charts. Through an umbrella chart you can easily provide a generic base configuration and only need to configure your specific cluster environment in a second values configuration.
 
 An example may look like the following snipped.
 
@@ -72,7 +96,20 @@ popeye:
     datasource: "victoriametrics"
 ```
 
-Some spinch examples are available [here](https://github.com/derailed/popeye/tree/master/spinach-examples).
+With this approach you just need to configure your spinach accordingly for each environment.
+
+### What is spinach and why do I configure it?
+Spinach is the configuration language for popeye to configure the linters within.
+An overview of all linters is available [here](https://github.com/derailed/popeye?tab=readme-ov-file#linters).
+Some spinach examples are available [here](https://github.com/derailed/popeye/tree/master/spinach-examples).
+
+### Sending metrics to prometheus
+Popeye supports sending issues via pushgateway to prometheus.
+The pushgateway provides an acceptor for data for metrics ingestion and is easy to host. 
+A simple documentation is available within the project documentation found [here](https://github.com/prometheus/pushgateway).
+To instruct popeye to send metrics towards the push gateway simply configure the value `cronJob.containerConfiguration.prometheus.address`.
+
+> NOTE: (2025-01-29): Configuring the outputFormat seems to interrupt with the transmission of metrics: [related issue](https://github.com/derailed/popeye/issues/426) 
 
 ## Honorable Mentions
 
