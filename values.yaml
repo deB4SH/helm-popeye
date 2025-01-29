@@ -64,6 +64,8 @@ job:
     #   cpu: 50m
     #   memory: 30Mi
 
+grafana:
+  enabled: false
 
 popeyeConfiguration: {}
   # popeye:
