@@ -13,16 +13,6 @@ metadata:
 data:
   popeye.json: |-
       {
-        "__inputs": [
-          {
-            "name": "DS_PROMETHEUS",
-            "label": "Prometheus",
-            "description": "",
-            "type": "datasource",
-            "pluginId": "prometheus",
-            "pluginName": "Prometheus"
-          }
-        ],
         "__elements": {},
         "__requires": [
           {
@@ -95,7 +85,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "gridPos": {
@@ -134,7 +124,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -189,7 +179,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "avg by(cluster) (popeye_cluster_score{cluster=~\"$cluster\"})",
@@ -217,7 +207,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -298,7 +288,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, popeye_code_total{severity=\"error\", cluster=~\"$cluster\", namespace=~\"$namespace\", linter=~\"$linter\"}) by (namespace, linter)",
@@ -315,7 +305,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -396,7 +386,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, popeye_code_total{severity=\"warn\", cluster=~\"$cluster\", namespace=~\"$namespace\", linter=~\"$linter\"}) by (namespace, linter)",
@@ -413,7 +403,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -494,7 +484,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, popeye_code_total{severity=\"info\", cluster=~\"$cluster\", namespace=~\"$namespace\", linter=~\"$linter\"}) by (namespace, linter)",
@@ -521,7 +511,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "description": "",
                 "fieldConfig": {
@@ -573,7 +563,7 @@ data:
                   {
                     "datasource": {
                       "type": "prometheus",
-                      "uid": "${DS_PROMETHEUS}"
+                      "uid": "{{.Values.grafana.datasource}}"
                     },
                     "editorMode": "code",
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"error\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
@@ -590,7 +580,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "description": "",
                 "fieldConfig": {
@@ -642,7 +632,7 @@ data:
                   {
                     "datasource": {
                       "type": "prometheus",
-                      "uid": "${DS_PROMETHEUS}"
+                      "uid": "{{.Values.grafana.datasource}}"
                     },
                     "editorMode": "code",
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"warn\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
@@ -659,7 +649,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "description": "Popeye severity total scores.",
                 "fieldConfig": {
@@ -711,7 +701,7 @@ data:
                   {
                     "datasource": {
                       "type": "prometheus",
-                      "uid": "${DS_PROMETHEUS}"
+                      "uid": "{{.Values.grafana.datasource}}"
                     },
                     "editorMode": "code",
                     "expr": "topk($topk, avg by(cluster,namespace) (popeye_severity_total{severity=\"info\", cluster=~\"$cluster\", namespace=~\"$namespace\"}))",
@@ -745,7 +735,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -828,7 +818,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, sum by (linter) (popeye_linter_tally_total{severity=\"error\", cluster=~\"$cluster\", linter=~\"$linter\"})) by (cluster, linter)",
@@ -845,7 +835,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -924,7 +914,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, sum by (linter) (popeye_linter_tally_total{severity=\"warn\", cluster=~\"$cluster\", linter=~\"$linter\"})) by (cluster, linter)",
@@ -941,7 +931,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "{{.Values.grafana.datasource}}"
             },
             "description": "",
             "fieldConfig": {
@@ -1020,7 +1010,7 @@ data:
               {
                 "datasource": {
                   "type": "prometheus",
-                  "uid": "${DS_PROMETHEUS}"
+                  "uid": "{{.Values.grafana.datasource}}"
                 },
                 "editorMode": "code",
                 "expr": "topk($topk, sum by (linter) (popeye_linter_tally_total{severity=\"info\", cluster=~\"$cluster\", linter=~\"$linter\"})) by (cluster, linter)",
@@ -1081,7 +1071,7 @@ data:
               "current": {},
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "{{.Values.grafana.datasource}}"
               },
               "definition": "label_values(popeye_code_total,cluster)",
               "hide": 0,
@@ -1105,7 +1095,7 @@ data:
               "current": {},
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "{{.Values.grafana.datasource}}"
               },
               "definition": "label_values(popeye_code_total,namespace)",
               "hide": 0,
@@ -1129,7 +1119,7 @@ data:
               "current": {},
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "{{.Values.grafana.datasource}}"
               },
               "definition": "label_values(popeye_code_total,linter)",
               "hide": 0,
