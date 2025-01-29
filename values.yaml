@@ -66,6 +66,8 @@ job:
 
 grafana:
   enabled: false
+  # Datasource to use for metrics. Check your Grafana Datasources for names. Options may be "prometheus" "victoriametrics"
+  datasource: ""
 
 popeyeConfiguration: {}
   # popeye:
