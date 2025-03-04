@@ -1,0 +1,41 @@
+name: update image
+
+on:
+  schedule:
+    - cron: "0 23 * * *"
+
+jobs:
+  update-image:
+    runs-on: ubuntu-latest
+    container:
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:1d2426f
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0 # all history for all branches and tags      
+      - name: Get currently latest release tag
+        id: latest_tag
+        run: |
+          echo LATEST_VERSION=$(curl --silent "https://api.github.com/repos/derailed/popeye/releases/latest" |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' ) >> $GITHUB_OUTPUT
+      - name: Replace Appversion with latest release tag
+        id: append_version
+        env:
+          TAG: ${{ steps.latest_tag.outputs.LATEST_VERSION }}  
+        run: |
+          sed -E -i 's/^appVersion:.+/appVersion: '$TAG'/g' Chart.yaml
+      - name: Commit files back to dev branch
+        run: |
+          # add to git and commit
+          git config user.email service.updater@home.lab
+          git config user.name ServiceUpdater
+          git add Chart.yaml
+          # add if dirty 
+          if git status --porcelain | grep .; then
+              git commit -am 'updated dependency'
+              git push || true
+              echo Repo is updated
+          else
+              echo Repo is clean
+          fi   
