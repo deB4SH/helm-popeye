@@ -111,6 +111,32 @@ To instruct popeye to send metrics towards the push gateway simply configure the
 
 > NOTE: (2025-01-29): Configuring the outputFormat seems to interrupt with the transmission of metrics: [related issue](https://github.com/derailed/popeye/issues/426) 
 
+> NOTE (2025-03-14): Setting prometheus as output is not intended [related comment](https://github.com/derailed/popeye/issues/426#issuecomment-2629000373). If you want to sent metrics towards the push gateway leave the output format empty.
+
+A simple configuration with the pushgateway running may look like the following snippet:
+
+```yaml
+popeye:
+  cronJob:
+    image:
+      repository: myAwesomePullProxy.local/hub.docker.com/derailed/popeye
+    containerConfiguration:
+      clusterName: playground
+      prometheus:
+        address: http://prometheus-pushgateway.prometheus-pushgateway:9091
+  popeyeConfiguration:
+    popeye:
+      allocations:
+        cpu:
+          underPercUtilization: 200
+          overPercUtilization: 50
+        memory:
+          underPercUtilization: 200
+          overPercUtilization: 50
+```          
+
+The pushgateway provides the "translation" to prometheus metrics which can be scraped by an agent.
+
 ## Honorable Mentions
 
 This wouldn't be able without the awesome work of the open source communities. 
