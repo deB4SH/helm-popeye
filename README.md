@@ -20,8 +20,6 @@ The chart is published via oci repository here on github via `oci://ghcr.io/deb4
 A general usage guide for using oci-based registries is provided via the official helm documentation available [here](https://helm.sh/docs/topics/registries/)
 
 ```
-helm repod add popeye oci://ghcr.io/deb4sh/helm-popeye
-helm repo update
 helm install popeye oci://ghcr.io/deb4sh/helm-popeye --version 0.0.0-e7609a
 ```
 
