@@ -8,7 +8,7 @@ jobs:
   update-image:
     runs-on: ubuntu-latest
     container:
-      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:1d2426f
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:d14c3d8
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,6 +36,13 @@ jobs:
               git commit -am 'updated dependency'
               git push || true
               echo Repo is updated
+              echo "CREATE_PR=true" >> $GITHUB_ENV
           else
               echo Repo is clean
-          fi   
+          fi
+      - name: Create PR
+        if: ${{ env.CREATE_PR != '' }}
+        uses: deb4sh/tea-pr@main
+        with:
+          token: ${{ secrets.AUTOMATIC_PR_TOKEN }}
+          base: 'main'
