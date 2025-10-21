@@ -1,0 +1,35 @@
+---
+# Source: popeye/templates/deployment/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: popeye-cronjob
+  labels:
+    app.kubernetes.io/version: "v0.22.1"
+    app.kubernetes.io/managed-by: Helm
+  namespace: default
+spec:
+  schedule: "* */1 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 30
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/version: "v0.22.1"
+        app.kubernetes.io/managed-by: Helm
+      namespace: default
+    spec:
+      template:
+        spec:
+          serviceAccountName: popeye-sa
+          restartPolicy: Never
+          containers:
+            - name: popeye-container
+              image: "derailed/popeye:v0.22.1"
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - popeye --force-exit-zero=true --all-namespaces --log-level=1

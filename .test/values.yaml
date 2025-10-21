@@ -1,0 +1,90 @@
+#configuration for cronjob
+cronJob:
+  # https://crontab.guru/#*_*/1_*_*_*
+  # “At every minute past every hour.” 
+  schedule: "* */1 * * *"
+  history:
+    failedJobsHistoryLimit: 1
+    successfulJobsHistoryLimit: 1
+  image:
+    repository: derailed/popeye
+    pullPolicy: IfNotPresent
+  imagePullSecrets: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # runAsNonRoot: true
+    # seccompProfile:
+    #   type: RuntimeDefault
+  
+
+  containerConfiguration:
+    # define a cluster name to set for reports
+    clusterName: ""
+    # https://github.com/derailed/popeye?tab=readme-ov-file#output-formats
+    # possible formats: standard, jurassic, yaml, html, json, junit, prometheus, score
+    outputFormat: ""
+    #trigger to scan all namespaces: options: true,false
+    allNamespaces: true
+    #define log level
+    #Specify log level. Use 0|1|2|3|4 for disable|info|warn|error|debug (default 1)
+    logLevel: 1
+    #prometheus configuration
+    prometheus:
+      address: ""
+      basicAuth:
+        # set to true if arguments should be tempalted
+        enabled: false
+        user: ""
+        password: ""
+
+
+#configuration for job started by cronjob
+job:
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # runAsNonRoot: true
+    # runAsUser: 1000
+    # runAsGroup: 1000
+    # seccompProfile:
+    #   type: RuntimeDefault
+    # capabilities:
+    #   drop:
+    #     - ALL
+  resources: {}
+    # limits:
+    #   cpu: 150m
+    #   memory: 100Mi
+    # requests:
+    #   cpu: 50m
+    #   memory: 30Mi
+
+grafana:
+  enabled: false
+  # Datasource to use for metrics. Check your Grafana Datasources for names. Options may be "prometheus" "victoriametrics"
+  datasource: ""
+
+popeyeConfiguration: {}
+  # popeye:
+  #   allocations:
+  #     cpu:
+  #       over: 100
+  #       under: 50
+  #     memory:
+  #       over: 100
+  #       under: 50
+  #   node:
+  #     limits:
+  #       cpu:    90
+  #       memory: 80
+  #   pod:
+  #     limits:
+  #       cpu:    80
+  #       memory: 75
+  #     restarts:
+  #       5
