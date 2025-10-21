@@ -1,0 +1,23 @@
+name: test-chart
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test-chart:
+    runs-on: ubuntu-latest
+    container:
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history for all branches and tags      
+      - name: Render Chart
+        run: |
+          helm template --debug --release-name popeye -f ./.test/values.yaml  --output-dir ./.test/result ./
+      - name: Diff Folders
+        run: |
+          diff -rq ./.test/expected ./.test/result
