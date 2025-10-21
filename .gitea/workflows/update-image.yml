@@ -8,7 +8,7 @@ jobs:
   update-image:
     runs-on: ubuntu-latest
     container:
-      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:d14c3d8
+      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
     steps:
       - name: Checkout
         uses: actions/checkout@v4
