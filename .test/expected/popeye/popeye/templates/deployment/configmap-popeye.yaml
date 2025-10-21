@@ -1,0 +1,13 @@
+---
+# Source: popeye/templates/deployment/configmap-popeye.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: popeye-config-popeye
+  namespace: default
+  labels:
+    app.kubernetes.io/version: "v0.22.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  spinach: |-
+    {}
