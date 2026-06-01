@@ -9,12 +9,12 @@ jobs:
   test-chart:
     runs-on: ubuntu-latest
     container:
-      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
+      image: ${{ vars.HELM_IMAGE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # all history for all branches and tags      
+          fetch-depth: 0 # all history for all branches and tags
       - name: Render Chart
         run: |
           helm template --debug --release-name popeye -f ./.test/values.yaml  --output-dir ./.test/result ./
