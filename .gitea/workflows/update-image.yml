@@ -8,13 +8,13 @@ jobs:
   update-image:
     runs-on: ubuntu-latest
     container:
-      image: hotbird.docker.nexus.macslabs.de/docker/ci-helm-image:fc6e855
+      image: ${{ vars.HELM_IMAGE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: dev
-          fetch-depth: 0 # all history for all branches and tags      
+          fetch-depth: 0 # all history for all branches and tags
       - name: Get currently latest release tag
         id: latest_tag
         run: |
@@ -22,7 +22,7 @@ jobs:
       - name: Replace Appversion with latest release tag
         id: append_version
         env:
-          TAG: ${{ steps.latest_tag.outputs.LATEST_VERSION }}  
+          TAG: ${{ steps.latest_tag.outputs.LATEST_VERSION }}
         run: |
           sed -E -i 's/^appVersion:.+/appVersion: '$TAG'/g' Chart.yaml
       - name: Commit files back to dev branch
@@ -31,7 +31,7 @@ jobs:
           git config user.email service.updater@home.lab
           git config user.name ServiceUpdater
           git add Chart.yaml
-          # add if dirty 
+          # add if dirty
           if git status --porcelain | grep .; then
               git commit -am 'updated dependency'
               git push || true
@@ -45,4 +45,4 @@ jobs:
         uses: deb4sh/tea-pr@main
         with:
           token: ${{ secrets.AUTOMATIC_PR_TOKEN }}
-          base: 'main'
+          base: "main"
